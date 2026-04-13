@@ -1,25 +1,60 @@
 const express = require("express");
-const cors = require('cors');
+const cors = require("cors");
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-let calendar = {};
+let calendar = {
+  handley_man: {},
+  heaven: {},
+  daniel: {}
+};
+
 let tasks = {};
 
 app.get("/", (req, res) => {
   res.send("cholobot-data running");
 });
 
-app.get("/calendar", (req, res) => res.json(calendar));
-app.post("/calendar", (req, res) => {
-  calendar = req.body;
-  console.log("Updated calendar:", calendar);
-  res.json({ ok: true });
+app.get("/calendar", (req, res) => {
+  res.json(calendar);
 });
 
-app.get("/tasks", (req, res) => res.json(tasks));
+app.post("/calendar", (req, res) => {
+  const { calendarKey, schedule } = req.body;
+
+  if (!calendarKey || !schedule) {
+    return res.status(400).json({
+      ok: false,
+      error: "calendarKey and schedule are required"
+    });
+  }
+
+  const validKeys = ["handley_man", "heaven", "daniel"];
+
+  if (!validKeys.includes(calendarKey)) {
+    return res.status(400).json({
+      ok: false,
+      error: "Invalid calendarKey"
+    });
+  }
+
+  calendar[calendarKey] = schedule;
+
+  console.log(`Updated ${calendarKey} calendar:`, schedule);
+
+  res.json({
+    ok: true,
+    calendar
+  });
+});
+
+app.get("/tasks", (req, res) => {
+  res.json(tasks);
+});
+
 app.post("/tasks", (req, res) => {
   tasks = req.body;
   console.log("Updated tasks:", tasks);
