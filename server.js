@@ -22,6 +22,10 @@ app.get("/calendar", (req, res) => {
   res.json(calendar);
 });
 
+app.get("/chisme_followups.json", (req, res) => {
+  res.sendFile(path.join(__dirname, "chisme_followups.json"));
+});
+
 app.post("/calendar", (req, res) => {
   const { calendarKey, schedule } = req.body;
 
