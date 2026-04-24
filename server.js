@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
 const path = require("path");
 const app = express();
 
@@ -23,7 +24,13 @@ app.get("/calendar", (req, res) => {
 });
 
 app.get("/chisme_followups.json", (req, res) => {
-  res.sendFile(path.join(__dirname, "chisme_followups.json"));
+  const filePath = path.join(__dirname, "chisme_followups.json");
+
+  if (!fs.existsSync(filePath)) {
+    return res.json([]);
+  }
+
+  res.sendFile(filePath);
 });
 
 app.post("/calendar", (req, res) => {
