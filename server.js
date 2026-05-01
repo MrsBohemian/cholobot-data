@@ -33,6 +33,18 @@ app.get("/chisme_followups.json", (req, res) => {
   res.sendFile(filePath);
 });
 
+app.post("/chisme_followups.json", (req, res) => {
+  const filePath = path.join(__dirname, "chisme_followups.json");
+
+  fs.writeFileSync(
+    filePath,
+    JSON.stringify(req.body, null, 2),
+    "utf-8"
+  );
+
+  res.json({ ok: true });
+});
+
 app.post("/calendar", (req, res) => {
   const { calendarKey, schedule } = req.body;
 
